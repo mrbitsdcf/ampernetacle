@@ -17,8 +17,6 @@ data "oci_core_images" "_" {
   shape                    = var.shape
   operating_system         = "Canonical Ubuntu"
   operating_system_version = "22.04"
-  #operating_system         = "Oracle Linux"
-  #operating_system_version = "7.9"
 }
 
 resource "oci_core_instance" "_" {
@@ -32,7 +30,7 @@ resource "oci_core_instance" "_" {
     ocpus         = var.ocpus_per_node
   }
   source_details {
-    source_id   = data.oci_core_images._.images[0].id
+    source_id   = "ocid1.image.oc1.iad.aaaaaaaa7bvpvpgorsj2ciivlrxd4acxcjpbuhfv26pld3qnhjav5hpamm5q" // data.oci_core_images._.images[0].id
     source_type = "image"
   }
   create_vnic_details {
