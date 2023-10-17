@@ -31,7 +31,15 @@ resource "oci_core_default_security_list" "_" {
 
 resource "oci_core_subnet" "_" {
   compartment_id    = local.compartment_id
-  cidr_block        = "10.0.0.0/24"
+  cidr_block        = "10.0.0.0/22"
+  vcn_id            = oci_core_vcn._.id
+  route_table_id    = oci_core_default_route_table._.id
+  security_list_ids = [oci_core_default_security_list._.id]
+}
+
+resource "oci_core_subnet" "sub2" {
+  compartment_id    = local.compartment_id
+  cidr_block        = "10.0.4.0/22"
   vcn_id            = oci_core_vcn._.id
   route_table_id    = oci_core_default_route_table._.id
   security_list_ids = [oci_core_default_security_list._.id]

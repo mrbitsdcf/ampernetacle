@@ -24,7 +24,17 @@ variable "how_many_nodes" {
 
 variable "availability_domain" {
   type    = number
-  default = 0
+  default = 1
+}
+
+variable "domains" {
+  type = list(number)
+  default = [
+    1,
+    1,
+    1,
+    1
+  ]
 }
 
 variable "ocpus_per_node" {
@@ -35,4 +45,15 @@ variable "ocpus_per_node" {
 variable "memory_in_gbs_per_node" {
   type    = number
   default = 6
+}
+
+variable "ip_list" {
+  type = list(string)
+  default = [
+    "10.0.0.11",
+    "10.0.0.49",
+    "10.0.0.148",
+    "10.0.0.119",
+    "10.0.0.12"
+  ]
 }

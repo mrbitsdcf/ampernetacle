@@ -22,7 +22,7 @@ data "oci_core_images" "_" {
 resource "oci_core_instance" "_" {
   for_each            = local.nodes
   display_name        = each.value.node_name
-  availability_domain = data.oci_identity_availability_domains._.availability_domains[var.availability_domain].name
+  availability_domain = data.oci_identity_availability_domains._.availability_domains[each.value.domain_name].name //var.availability_domain].name
   compartment_id      = local.compartment_id
   shape               = var.shape
   shape_config {
@@ -30,7 +30,7 @@ resource "oci_core_instance" "_" {
     ocpus         = var.ocpus_per_node
   }
   source_details {
-    source_id   = "ocid1.image.oc1.iad.aaaaaaaa7bvpvpgorsj2ciivlrxd4acxcjpbuhfv26pld3qnhjav5hpamm5q" // data.oci_core_images._.images[0].id
+    source_id   = "ocid1.image.oc1.iad.aaaaaaaah3ahpwe2l4bpxl3q3hiz6ovnw2fmakh3ma4dnauhniktmiwxl72q" // data.oci_core_images._.images[0].id
     source_type = "image"
   }
   create_vnic_details {
@@ -52,15 +52,21 @@ resource "oci_core_instance" "_" {
       "cloud-init status --wait >/dev/null",
     ]
   }
+  # lifecycle {
+  #   ignore_changes = [
+  #     metadata
+  #   ]
+  # }
 }
 
 locals {
   nodes = {
     for i in range(1, 1 + var.how_many_nodes) :
     i => {
-      node_name  = format("node%d", i)
-      ip_address = format("10.0.0.%d", 10 + i)
-      role       = i == 1 ? "controlplane" : "worker"
+      node_name   = format("node%d", i)
+      domain_name = var.domains[i]
+      ip_address  = var.ip_list[i] // format("10.0.0.%d", 10 + i)
+      role        = i == 0 ? "controlplane" : "worker"
     }
   }
 }
